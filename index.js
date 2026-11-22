@@ -21,16 +21,23 @@ export async function connectToMongoDB() {
 
 const mongoClient=await connectToMongoDB();
 const db=mongoClient.db("book-nook");
-const collection=db.collection("books");
+const bookCollection=db.collection("books");
 
 // Books added
 
 app.post('/books',async(req,res)=>{
     const data=req.body;
-    const result=await collection.insertOne(data);
+    const result=await bookCollection.insertOne(data);
 
     console.log(result)
 
+    res.send(result)
+})
+
+// All Books Read
+
+app.get('/books',async(req,res)=>{
+    const result=await bookCollection.find().toArray();
     res.send(result)
 })
 
