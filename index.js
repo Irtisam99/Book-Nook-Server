@@ -49,6 +49,20 @@ app.get('/books/:id',async(req,res)=>{
     res.send(result)
 })
 
+
+// Update Book
+
+app.patch('/books/:id',async(req,res)=>{
+    const {id}=req.params;
+    const updateData=req.body;
+    const result=await bookCollection.updateOne(
+        {_id:new ObjectId(id)},
+        {$set:updateData}
+    
+    )
+    res.send(result)
+})
+
 app.get('/',(req,res)=>{
     res.send({message:"Server is running"})
 })
