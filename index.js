@@ -146,6 +146,45 @@ app.get('/borrows',async(req,res)=>{
     res.send(result)
 })
 
+// Return Book
+
+app.delete('/borrows/:borrowId',async(req,res)=>{
+
+    try{
+        const {borrowId}=req.params;
+
+        const borrow=await borrowCollection.findOne(
+            {_id:new ObjectId(borrowId)}
+        );
+
+        if(!borrow){
+            return res.status(404).send(
+                {message:"Borrow record not found"}
+            )
+        }
+
+        const result=await borrowCollection.deleteOne(
+            {_id:new ObjectId(borrowId)}
+        )
+
+        if(result.deletedCount>0){
+            await bookCollection.updateOne(
+                {_id:new ObjectId(borrow.bookId)},
+                {$inc:{availableCopies:1}}
+            )
+        }
+        res.send({
+            message:"Book returned successfully"
+        })
+
+    }catch(error){
+        console.error(error);
+        res.status(500).send({
+            message:"Something went wrong"
+        })
+    }
+})
+
 app.get('/', (req, res) => {
     res.send({ message: "Server is running" })
 })
