@@ -139,6 +139,13 @@ app.post('/borrows', async (req, res) => {
     }
 });
 
+// Get all borrows
+
+app.get('/borrows',async(req,res)=>{
+    const result=await borrowCollection.find().toArray();
+    res.send(result)
+})
+
 app.get('/', (req, res) => {
     res.send({ message: "Server is running" })
 })
